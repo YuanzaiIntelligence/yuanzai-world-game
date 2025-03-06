@@ -59,7 +59,7 @@ public class MapGenerate : MonoBehaviour
     private void FirstGenerateLine()
     {
         var linesList = new List<LineInfo>();
-        foreach (var connection in MapManager.Instance.mapDate.map_relation)
+        foreach (var connection in MapManager.Instance.responseData.data.map_relation)
         {
             if (scenesDic.TryGetValue(connection.source, out var sourceObj) && scenesDic.TryGetValue(connection.target, out var targetObj))
             {

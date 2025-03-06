@@ -148,7 +148,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ed070576eece204f91873babe719f56, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SceneData: {fileID: 11400000, guid: dd088678deb2a6c42960ce19df1fd9ef, type: 2}
+  sceneData: {fileID: 11400000, guid: dd088678deb2a6c42960ce19df1fd9ef, type: 2}
   startSceneName: 0
   curSceneInfo:
     Name: 
@@ -157,6 +157,7 @@ MonoBehaviour:
     linkScene: []
   fadeCanvas: {fileID: 1970030597}
   fadeDuration: 0.3
+  lookScene: 
 --- !u!4 &2106756
 Transform:
   m_ObjectHideFlags: 0
@@ -420,10 +421,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveDuration: 0.5
   sceneData: {fileID: 11400000, guid: dd088678deb2a6c42960ce19df1fd9ef, type: 2}
-  max_X: 9
-  max_Y: 5
-  min_X: -9
-  min_Y: -5
   canFreeMove: 0
   dragSpeed: 0.01
 --- !u!1 &1233246792
@@ -660,41 +657,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d775418bf9df842fa94649999f66c557, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapJSONData: "{\n    \"map_relation\": [\n        {\n            \"source\": \"\u5E1D\u90FD\u7406\u5DE5AI\u5B9E\u9A8C\u5BA4\",\n           
-    \"target\": \"\u795E\u7ECF\u5143\u5B9E\u9A8C\u5BA4\"\n        },\n        {\n           
-    \"source\": \"\u5E1D\u90FD\u7406\u5DE5AI\u5B9E\u9A8C\u5BA4\",\n            \"target\":
-    \"\u81F4\u4E00\u79D1\u6280\u5C55\u5385\"\n        },\n        {\n           
-    \"source\": \"\u6E05\u98CE\u658B\u7F51\u5427\",\n            \"target\": \"\u8096\u5948\u5496\u5561\u5C4B\"\n       
-    },\n        {\n            \"source\": \"\u6E05\u98CE\u658B\u7F51\u5427\",\n           
-    \"target\": \"\u6821\u56ED\u62DB\u8058\u4F1A\"\n        },\n        {\n           
-    \"source\": \"\u76DB\u4E16\u6C5F\u6E56\xB7\u957F\u5B89\u57CE\",\n           
-    \"target\": \"\u6731\u96C0\u6218\u573A\"\n        },\n        {\n           
-    \"source\": \"\u76DB\u4E16\u6C5F\u6E56\xB7\u957F\u5B89\u57CE\",\n           
-    \"target\": \"\u4E09\u754C\u4F1A\u603B\u8235\"\n        },\n        {\n           
-    \"source\": \"\u4E09\u754C\u4F1A\u603B\u8235\",\n            \"target\": \"\u5E7D\u51A5\u9B3C\u5E02\"\n       
-    },\n        {\n            \"source\": \"\u6731\u96C0\u6218\u573A\",\n           
-    \"target\": \"\u4FA0\u4FA3\u51B3\u8D5B\u573A\u9986\"\n        },\n        {\n           
-    \"source\": \"\u81F4\u4E00\u79D1\u6280\u5C55\u5385\",\n            \"target\":
-    \"\u6821\u56ED\u62DB\u8058\u4F1A\"\n        },\n        {\n            \"source\":
-    \"\u7434\u97F5\u4ED9\u5C9B\",\n            \"target\": \"\u97F3\u4E50\u7CFB\u7434\u623F\"\n       
-    },\n        {\n            \"source\": \"\u6821\u56ED\u62DB\u8058\u4F1A\",\n           
-    \"target\": \"\u5973\u751F\u5BBF\u820D309\"\n        },\n        {\n           
-    \"source\": \"\u6C99\u6F20\u53E4\u57CE\u526F\u672C\",\n            \"target\":
-    \"\u6606\u4ED1\u589F\xB7\u9AD8\u9636\u526F\u672C\"\n        },\n        {\n           
-    \"source\": \"\u795E\u7ECF\u5143\u5B9E\u9A8C\u5BA4\",\n            \"target\":
-    \"\u97F3\u4E50\u7CFB\u7434\u623F\"\n        },\n        {\n            \"source\":
-    \"\u4FA0\u4FA3\u51B3\u8D5B\u573A\u9986\",\n            \"target\": \"\u53E4\u94F6\u674F\u6811\u6D1E\"\n       
-    },\n        {\n            \"source\": \"\u8096\u5948\u5496\u5561\u5C4B\",\n           
-    \"target\": \"\u5973\u751F\u5BBF\u820D309\"\n        },\n        {\n           
-    \"source\": \"\u5973\u751F\u5BBF\u820D309\",\n            \"target\": \"\u53E4\u94F6\u674F\u6811\u6D1E\"\n       
-    },\n        {\n            \"source\": \"\u5E7D\u51A5\u9B3C\u5E02\",\n           
-    \"target\": \"\u6606\u4ED1\u589F\xB7\u9AD8\u9636\u526F\u672C\"\n        },\n       
-    {\n            \"source\": \"\u97F3\u4E50\u7CFB\u7434\u623F\",\n            \"target\":
-    \"\u53E4\u94F6\u674F\u6811\u6D1E\"\n        }\n    ]\n}"
-  mapDate:
-    map_relation: []
+  apiUrl: https://yuanzaiorld-api-qpkopyhoeh.cn-wulanchabu.fcapp.run/api/get_map_relation_info_api
+  world_id: 4
+  responseData:
+    status: 
+    message: 
+    data:
+      map_relation: []
+      nodes: []
   sceneInfoList: []
-  IsVertical: 1
   sceneData: {fileID: 11400000, guid: dd088678deb2a6c42960ce19df1fd9ef, type: 2}
   lineDataSO: {fileID: 11400000, guid: c10ef6053a32d01498a7e866d4c4faaa, type: 2}
 --- !u!1660057539 &9223372036854775807

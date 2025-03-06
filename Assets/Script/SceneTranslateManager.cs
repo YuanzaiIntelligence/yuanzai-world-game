@@ -8,7 +8,7 @@ using static UnityEditor.SceneManagement.SceneHierarchyHooks;
 public class SceneTranslateManager : Singleton<SceneTranslateManager>
 {
     [Header("所有场景信息")]
-    public SceneData SceneData;
+    public SceneData sceneData;
 
     [Header("开始场景")]
     public SceneName startSceneName;
@@ -22,11 +22,17 @@ public class SceneTranslateManager : Singleton<SceneTranslateManager>
 
     private bool isFade;
 
+    public string lookScene;//暂时，摄像机对焦的场景名
 
     private void Start()
     {
-        CameraController.Instance.canFreeMove = true;
-        Transition(string.Empty, startSceneName.ToString());
+        
+        if(sceneData.sceneInfoList.Count != 0)
+        {
+            CameraController.Instance.canFreeMove = true;
+            Transition(string.Empty, startSceneName.ToString());
+        }
+
     }
 
 
@@ -38,11 +44,13 @@ public class SceneTranslateManager : Singleton<SceneTranslateManager>
     {
 
 
-        foreach (var sceneInfo in SceneData.sceneInfoList)
+        foreach (var sceneInfo in sceneData.sceneInfoList)
         {
             if (sceneInfo.Name == to)
             {
                 curSceneInfo = sceneInfo;
+                lookScene = sceneInfo.Name;
+                break;
             }
         }
 
@@ -68,11 +76,13 @@ public class SceneTranslateManager : Singleton<SceneTranslateManager>
     {
         CameraController.Instance.canFreeMove = false;
 
-        foreach (var sceneInfo in SceneData.sceneInfoList)
+        foreach (var sceneInfo in sceneData.sceneInfoList)
         {
             if (sceneInfo.Name == sceneName)
             {
                 curSceneInfo = sceneInfo;
+                lookScene = sceneInfo.Name;
+                break;
             }
         }
         
@@ -86,6 +96,7 @@ public class SceneTranslateManager : Singleton<SceneTranslateManager>
     /// <param name="to"></param>
     public void Transition(string from, string to)
     {
+
         if (!isFade)
         {
             StartCoroutine(TransitionToScene(from, to));
@@ -111,6 +122,16 @@ public class SceneTranslateManager : Singleton<SceneTranslateManager>
 
         Scene newscene = SceneManager.GetSceneAt(SceneManager.sceneCount - 1);
         SceneManager.SetActiveScene(newscene);
+
+        if(to == SceneName.Map.ToString())
+        {
+            CameraController.Instance.MoveCamera(lookScene);
+        }
+        else
+        {
+            CameraController.Instance.MoveCamera(string.Empty);
+        }
+        
 
         yield return Fade(0);
     }

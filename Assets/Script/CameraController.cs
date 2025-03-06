@@ -10,22 +10,29 @@ public class CameraController : Singleton<CameraController>
     [Header("数据")]
     public SceneData sceneData;
 
-    [SerializeField]private float max_X = 9;
-    [SerializeField] private float max_Y = 5;
-    [SerializeField] private float min_X = -9;
-    [SerializeField] private float min_Y = -5;
+    private float max_X = 9;
+    private float max_Y = 5;
+    private float min_X = 0;
+    private float min_Y = 0;
 
-
-    private void Start()
-    {
-        UpdateMaxMin();
-    }
 
     public bool canFreeMove;
 
     public float dragSpeed = 0.01f;
     private Vector3 dragOrigin;
     private bool isDragging = false;
+
+
+    private void Start()
+    {
+        if (sceneData.sceneInfoList.Count != 0)
+        {
+            foreach (var item in sceneData.sceneInfoList)
+            {
+                UpdateMaxMin(item.X, item.Y);
+            }
+        }
+    }
 
     void Update()
     {
@@ -77,43 +84,45 @@ public class CameraController : Singleton<CameraController>
                 break;
             }
         }
-        StartCoroutine(Move(new Vector3(targetPos.x, targetPos.y, -10)));
+
+        transform.position = new Vector3(targetPos.x, targetPos.y, -10);
+
+        //tartCoroutine(Move(new Vector3(targetPos.x, targetPos.y, -10)));
     }
 
-    private IEnumerator Move(Vector3 targetPos)
+    //private IEnumerator Move(Vector3 targetPos)
+    //{
+
+    //    float result = Vector3.Distance(transform.position, targetPos);
+    //    float speed = Mathf.Abs(result) / moveDuration;
+
+    //    // 当距离目标位置还有一定距离时继续移动
+    //    while (Vector3.Distance(transform.position, targetPos) > 0.01f)
+    //    {
+    //        // 使用Vector3.MoveTowards进行平滑移动
+    //        transform.position = Vector3.MoveTowards(
+    //            transform.position,
+    //            targetPos,
+    //            speed * Time.deltaTime
+    //        );
+
+    //        yield return null;
+    //    }
+
+    //    // 确保最终位置精确
+    //    transform.position = targetPos;
+
+    //}
+
+
+    public void UpdateMaxMin(float x, float y)
     {
 
-        float result = Vector3.Distance(transform.position, targetPos);
-        float speed = Mathf.Abs(result) / moveDuration;
+        max_X = Mathf.Max(max_X, x);
+        max_Y = Mathf.Max(max_Y, y);
+        min_X = Mathf.Min(min_X, x);
+        min_Y = Mathf.Min(min_Y, y);
 
-        // 当距离目标位置还有一定距离时继续移动
-        while (Vector3.Distance(transform.position, targetPos) > 0.01f)
-        {
-            // 使用Vector3.MoveTowards进行平滑移动
-            transform.position = Vector3.MoveTowards(
-                transform.position,
-                targetPos,
-                speed * Time.deltaTime
-            );
-
-            yield return null;
-        }
-
-        // 确保最终位置精确
-        transform.position = targetPos;
-
-    }
-
-
-    private void UpdateMaxMin()
-    {
-        foreach (var item in sceneData.sceneInfoList)
-        {
-            max_X = Mathf.Max(max_X, item.X);
-            max_Y = Mathf.Max(max_Y, item.Y);
-            min_X = Mathf.Min(min_X, item.X);
-            min_Y = Mathf.Min(min_Y, item.Y);
-        }
     }
 
     

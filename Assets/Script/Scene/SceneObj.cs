@@ -10,6 +10,5 @@ public class SceneObj : MonoBehaviour, IPointerDownHandler
     {
         //Debug.Log(nameText.text);
         SceneTranslateManager.Instance.MapTransitionScene(nameText.text);
-        CameraController.Instance.MoveCamera(string.Empty);
     }
 }

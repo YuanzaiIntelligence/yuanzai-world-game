@@ -10,10 +10,7 @@ public class ToOtherSceneObj : MonoBehaviour, IPointerDownHandler
     {
         if(nameText.text == "返回地图")
         {
-            var curSceneName = SceneTranslateManager.Instance.curSceneInfo.Name;
-            //Debug.Log(curSceneName);
             SceneTranslateManager.Instance.SceneTransitionMap();
-            CameraController.Instance.MoveCamera(curSceneName);
             return;
         }
         SceneTranslateManager.Instance.SceneTransitionScene(nameText.text);

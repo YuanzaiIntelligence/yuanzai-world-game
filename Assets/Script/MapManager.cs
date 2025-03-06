@@ -1,73 +1,59 @@
-﻿using Dagre;
-using System.Collections.Generic;
-using System;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using Newtonsoft.Json;
-using System.Xml.Linq;
+using System.Collections;
+using System.Text;
+using UnityEngine.Networking;
 
-/// <summary>
-/// 所有连接列表
-/// </summary>
-[Serializable]
-public class MapRelation
-{
-    public List<NodeConnection> map_relation;
-}
+///// <summary>
+///// 所有连接列表
+///// </summary>
+//[Serializable]
+//public class MapRelation
+//{
+//    public List<NodeConnection> map_relation;
+//}
 
-/// <summary>
-/// source - target连接关系
-/// </summary>
-[Serializable]
-public class NodeConnection
-{
-    public string source;
-    public string target;
-}
+///// <summary>
+///// source - target连接关系
+///// </summary>
+//[Serializable]
+//public class NodeConnection
+//{
+//    public string source;
+//    public string target;
+//}
 
 
 
 public class MapManager : Singleton<MapManager>
 {
-    [Header("mapJSON数据")]
-    [TextArea(5, 10)]
-    public string mapJSONData;
+    [Header("Api")]
+    public string apiUrl = "https://yuanzaiorld-api-qpkopyhoeh.cn-wulanchabu.fcapp.run/api/get_map_relation_info_api";
+    public int world_id = 4;
 
-    [Header("解析后的map数据")]
-    public MapRelation mapDate;
+    [Header("收到的数据")]
+    public MapRelationResponseData responseData;
 
     [Header("生成的场景信息")]
     public List<SceneInfo> sceneInfoList = new();
-
-    [Header("布局")]
-    public bool IsVertical;
 
     [Header("场景数据")]
     public SceneData sceneData;
     public LineDataSO lineDataSO;
 
-    // 所有节点
-    public HashSet<string> nodeNames = new();
-
-    // 存储创建的节点，以便于后续引用
-    private Dictionary<string, DagreInputNode> nodeDict = new();
-
-    private string firstScene;
-
     protected override void Awake()
     {
         base.Awake();
 
-        //ClearData();
-        if (sceneData.sceneInfoList.Count == 0)
-            CreateGraphFromJson();
-    }
+        if(sceneData.sceneInfoList.Count == 0)
+            StartCoroutine(GetMapRelationInfo(world_id));
 
 
-    private void Start()
-    {
-        firstScene = sceneData.sceneInfoList[0].Name;
-        CameraController.Instance.MoveCamera(firstScene);
+        //暂时
+        SetFirstScene();
+
     }
+
 
     [ContextMenu("清空数据")]
     public void ClearData()
@@ -78,84 +64,71 @@ public class MapManager : Singleton<MapManager>
     }
 
 
-    /// <summary>
-    /// 解析mapJson数据，创建map布局
-    /// </summary>
-    private void CreateGraphFromJson()
+
+    IEnumerator GetMapRelationInfo(int worldId)
     {
-        mapDate = JsonConvert.DeserializeObject<MapRelation>(mapJSONData);
-
-        // 收集所有节点名称
-        foreach (var connection in mapDate.map_relation)
+        // 创建请求体
+        MapRelationRequestData requestData = new MapRelationRequestData
         {
-            nodeNames.Add(connection.source);
-            nodeNames.Add(connection.target);
-        }
+            world_id = worldId
+        };
 
+        // 将请求体序列化为JSON
+        string jsonData = JsonUtility.ToJson(requestData);
 
-        // 创建图实例
-        DagreInputGraph dg = new DagreInputGraph();
-        dg.VerticalLayout = IsVertical;
+        // 创建UnityWebRequest
+        UnityWebRequest request = new UnityWebRequest(apiUrl, "POST");
+        byte[] bodyRaw = Encoding.UTF8.GetBytes(jsonData);
+        request.uploadHandler = new UploadHandlerRaw(bodyRaw);
+        request.downloadHandler = new DownloadHandlerBuffer();
 
+        // 设置请求头
+        request.SetRequestHeader("Content-Type", "application/json");
 
-        // 首先创建所有节点
-        foreach (string nodeName in nodeNames)
+        // 发送请求
+        yield return request.SendWebRequest();
+
+        // 处理响应
+        if (request.result == UnityWebRequest.Result.ConnectionError ||
+            request.result == UnityWebRequest.Result.ProtocolError)
         {
-            // 创建节点并存储在字典中，以便后续引用
-            var node = dg.AddNode(new { Name = nodeName }, 400, 200);
-            nodeDict[nodeName] = node;
+            Debug.LogError("API请求错误: " + request.error);
         }
-
-        //添加所有的边
-        foreach (var connection in mapDate.map_relation)
+        else
         {
-            
-            // 获取源节点和目标节点
-            if(nodeDict.TryGetValue(connection.source, out var sourceNode) && nodeDict.TryGetValue(connection.target, out var targetNode))
-            {
-                dg.AddEdge(sourceNode, targetNode);
-            }
-            else
-            {
-                Debug.LogWarning($"无法添加边: {connection.source} -> {connection.target}，节点不存在");
-            }
+            // 成功获取响应
+            Debug.Log("API响应: " + request.downloadHandler.text);
 
-        }
+            // 解析JSON响应
+            responseData = JsonUtility.FromJson<MapRelationResponseData>(request.downloadHandler.text);
 
-        try
-        {
-            // 计算布局
-            dg.Layout();
-            
+            StoreSceneLayout();
         }
-        catch (Exception ex)
-        {
-            Debug.LogError($"布局计算失败: {ex.Message}\n{ex.StackTrace}");
-        }
-
-        // 存储位置信息
-        StoreSceneLayout();
     }
+
+
 
     /// <summary>
     /// 存储位置信息
     /// </summary>
     private void StoreSceneLayout()
     {
-        foreach (var node in nodeDict)
+        foreach (var node in responseData.data.nodes)
         {
             SceneInfo sceneInfo = new SceneInfo();
-            sceneInfo.Name = node.Key;
-            sceneInfo.X = node.Value.X / 100;
-            sceneInfo.Y = node.Value.Y / 100;
+            sceneInfo.Name = node.name;
+            sceneInfo.X = node.x * 5;
+            sceneInfo.Y = node.y * 5;
 
-            foreach (var connection in mapDate.map_relation)
+            CameraController.Instance.UpdateMaxMin(sceneInfo.X, sceneInfo.Y);
+
+            foreach (var connection in responseData.data.map_relation)
             {
-                if (node.Key == connection.source)
+                if (node.name == connection.source)
                 {
                     sceneInfo.linkScene.Add(connection.target);
                 }
-                else if (node.Key == connection.target)
+                else if (node.name == connection.target)
                 {
                     sceneInfo.linkScene.Add(connection.source);
                 }
@@ -165,9 +138,62 @@ public class MapManager : Singleton<MapManager>
         }
 
         sceneData.sceneInfoList = sceneInfoList;
+
+        //暂时
+        SetFirstScene();
+
+        CameraController.Instance.canFreeMove = true;
+        SceneTranslateManager.Instance.Transition(string.Empty, SceneName.Map.ToString());
     }
 
+    /// <summary>
+    /// 暂时
+    /// </summary>
+    private void SetFirstScene()
+    {
+        if (sceneData.sceneInfoList.Count != 0)
+            SceneTranslateManager.Instance.lookScene = sceneData.sceneInfoList[0].Name;
+    }
 
+}
+
+
+// 请求数据类
+[System.Serializable]
+public class MapRelationRequestData
+{
+    public int world_id;
+}
+
+// 与API响应匹配的数据类
+[System.Serializable]
+public class MapRelationResponseData
+{
+    public string status;
+    public string message;
+    public MapData data;
+}
+
+[System.Serializable]
+public class MapData
+{
+    public List<MapRelation> map_relation;
+    public List<MapNode> nodes;
+}
+
+[System.Serializable]
+public class MapRelation
+{
+    public string source;
+    public string target;
+}
+
+[System.Serializable]
+public class MapNode
+{
+    public string name;
+    public float x;
+    public float y;
 }
 
 
