@@ -1,4 +1,4 @@
-using TMPro;
+ï»¿using TMPro;
 using UnityEngine;
 
 public class SceneCanvasInfo : MonoBehaviour
@@ -15,14 +15,14 @@ public class SceneCanvasInfo : MonoBehaviour
     }
 
     /// <summary>
-    /// ³¡¾°canvas³õÊ¼»¯
+    /// åœºæ™¯canvasåˆå§‹åŒ–
     /// </summary>
     private void InitSceneInfo()
     {
         textName.text = SceneTranslateManager.Instance.curSceneInfo.Name;
 
         var map = Instantiate(toOtherScenePrefab, toOtherScenePrefabTrans).GetComponent<ToOtherSceneObj>();
-        map.nameText.text = "·µ»ØµØÍ¼";
+        map.nameText.text = "è¿”å›åœ°å›¾";
 
         foreach (var toOtherSceneName in SceneTranslateManager.Instance.curSceneInfo.linkScene)
         {

@@ -1,19 +1,19 @@
-using NUnit.Framework;
+ï»¿using NUnit.Framework;
 using System.Collections.Generic;
 using UnityEditor.MemoryProfiler;
 using UnityEngine;
 
 public class MapGenerate : MonoBehaviour
 {
-    [Header("³¡¾°Êı¾İ")]
+    [Header("åœºæ™¯æ•°æ®")]
     public SceneData sceneData;
     public LineDataSO lineDataSO;
 
-    [Header("Ô¤ÖÆÌå")]
+    [Header("é¢„åˆ¶ä½“")]
     public GameObject scenePrefab;
     public LineRenderer mapLinePrefab;
 
-    [Header("·ÅÖÃÎ»")]
+    [Header("æ”¾ç½®ä½")]
     public Transform scenesTrans;
     public Transform linesTrans;
 
@@ -27,7 +27,7 @@ public class MapGenerate : MonoBehaviour
     }
 
     /// <summary>
-    /// ¸ù¾İscenedataÊı¾İÔÚµØÍ¼ÉÏ´´½¨prefab
+    /// æ ¹æ®scenedataæ•°æ®åœ¨åœ°å›¾ä¸Šåˆ›å»ºprefab
     /// </summary>
     private void GenerateMap()
     {
@@ -54,7 +54,7 @@ public class MapGenerate : MonoBehaviour
     }
 
     /// <summary>
-    /// Ê×´ÎÉú³ÉÏß
+    /// é¦–æ¬¡ç”Ÿæˆçº¿
     /// </summary>
     private void FirstGenerateLine()
     {
@@ -80,7 +80,7 @@ public class MapGenerate : MonoBehaviour
     }
 
     /// <summary>
-    /// ÒÑÓĞÏßµÄÊı¾İÉú³ÉÏß
+    /// å·²æœ‰çº¿çš„æ•°æ®ç”Ÿæˆçº¿
     /// </summary>
     private void GenerateLine()
     {

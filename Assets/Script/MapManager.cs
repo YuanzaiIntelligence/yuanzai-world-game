@@ -1,4 +1,4 @@
-using Dagre;
+ï»¿using Dagre;
 using System.Collections.Generic;
 using System;
 using UnityEngine;
@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 using System.Xml.Linq;
 
 /// <summary>
-/// ËùÓĞÁ¬½ÓÁĞ±í
+/// æ‰€æœ‰è¿æ¥åˆ—è¡¨
 /// </summary>
 [Serializable]
 public class MapRelation
@@ -15,7 +15,7 @@ public class MapRelation
 }
 
 /// <summary>
-/// source - targetÁ¬½Ó¹ØÏµ
+/// source - targetè¿æ¥å…³ç³»
 /// </summary>
 [Serializable]
 public class NodeConnection
@@ -28,27 +28,27 @@ public class NodeConnection
 
 public class MapManager : Singleton<MapManager>
 {
-    [Header("mapJSONÊı¾İ")]
+    [Header("mapJSONæ•°æ®")]
     [TextArea(5, 10)]
     public string mapJSONData;
 
-    [Header("½âÎöºóµÄmapÊı¾İ")]
+    [Header("è§£æåçš„mapæ•°æ®")]
     public MapRelation mapDate;
 
-    [Header("Éú³ÉµÄ³¡¾°ĞÅÏ¢")]
+    [Header("ç”Ÿæˆçš„åœºæ™¯ä¿¡æ¯")]
     public List<SceneInfo> sceneInfoList = new();
 
-    [Header("²¼¾Ö")]
+    [Header("å¸ƒå±€")]
     public bool IsVertical;
 
-    [Header("³¡¾°Êı¾İ")]
+    [Header("åœºæ™¯æ•°æ®")]
     public SceneData sceneData;
     public LineDataSO lineDataSO;
 
-    // ËùÓĞ½Úµã
+    // æ‰€æœ‰èŠ‚ç‚¹
     public HashSet<string> nodeNames = new();
 
-    // ´æ´¢´´½¨µÄ½Úµã£¬ÒÔ±ãÓÚºóĞøÒıÓÃ
+    // å­˜å‚¨åˆ›å»ºçš„èŠ‚ç‚¹ï¼Œä»¥ä¾¿äºåç»­å¼•ç”¨
     private Dictionary<string, DagreInputNode> nodeDict = new();
 
     private string firstScene;
@@ -69,7 +69,7 @@ public class MapManager : Singleton<MapManager>
         CameraController.Instance.MoveCamera(firstScene);
     }
 
-    [ContextMenu("Çå¿ÕÊı¾İ")]
+    [ContextMenu("æ¸…ç©ºæ•°æ®")]
     public void ClearData()
     {
         sceneData.sceneInfoList = null;
@@ -79,13 +79,13 @@ public class MapManager : Singleton<MapManager>
 
 
     /// <summary>
-    /// ½âÎömapJsonÊı¾İ£¬´´½¨map²¼¾Ö
+    /// è§£æmapJsonæ•°æ®ï¼Œåˆ›å»ºmapå¸ƒå±€
     /// </summary>
     private void CreateGraphFromJson()
     {
         mapDate = JsonConvert.DeserializeObject<MapRelation>(mapJSONData);
 
-        // ÊÕ¼¯ËùÓĞ½ÚµãÃû³Æ
+        // æ”¶é›†æ‰€æœ‰èŠ‚ç‚¹åç§°
         foreach (var connection in mapDate.map_relation)
         {
             nodeNames.Add(connection.source);
@@ -93,52 +93,52 @@ public class MapManager : Singleton<MapManager>
         }
 
 
-        // ´´½¨Í¼ÊµÀı
+        // åˆ›å»ºå›¾å®ä¾‹
         DagreInputGraph dg = new DagreInputGraph();
         dg.VerticalLayout = IsVertical;
 
 
-        // Ê×ÏÈ´´½¨ËùÓĞ½Úµã
+        // é¦–å…ˆåˆ›å»ºæ‰€æœ‰èŠ‚ç‚¹
         foreach (string nodeName in nodeNames)
         {
-            // ´´½¨½Úµã²¢´æ´¢ÔÚ×ÖµäÖĞ£¬ÒÔ±ãºóĞøÒıÓÃ
-            var node = dg.AddNode(new { Name = nodeName }, 200, 200);
+            // åˆ›å»ºèŠ‚ç‚¹å¹¶å­˜å‚¨åœ¨å­—å…¸ä¸­ï¼Œä»¥ä¾¿åç»­å¼•ç”¨
+            var node = dg.AddNode(new { Name = nodeName }, 400, 200);
             nodeDict[nodeName] = node;
         }
 
-        //Ìí¼ÓËùÓĞµÄ±ß
+        //æ·»åŠ æ‰€æœ‰çš„è¾¹
         foreach (var connection in mapDate.map_relation)
         {
             
-            // »ñÈ¡Ô´½ÚµãºÍÄ¿±ê½Úµã
+            // è·å–æºèŠ‚ç‚¹å’Œç›®æ ‡èŠ‚ç‚¹
             if(nodeDict.TryGetValue(connection.source, out var sourceNode) && nodeDict.TryGetValue(connection.target, out var targetNode))
             {
                 dg.AddEdge(sourceNode, targetNode);
             }
             else
             {
-                Debug.LogWarning($"ÎŞ·¨Ìí¼Ó±ß: {connection.source} -> {connection.target}£¬½Úµã²»´æÔÚ");
+                Debug.LogWarning($"æ— æ³•æ·»åŠ è¾¹: {connection.source} -> {connection.target}ï¼ŒèŠ‚ç‚¹ä¸å­˜åœ¨");
             }
 
         }
 
         try
         {
-            // ¼ÆËã²¼¾Ö
+            // è®¡ç®—å¸ƒå±€
             dg.Layout();
             
         }
         catch (Exception ex)
         {
-            Debug.LogError($"²¼¾Ö¼ÆËãÊ§°Ü: {ex.Message}\n{ex.StackTrace}");
+            Debug.LogError($"å¸ƒå±€è®¡ç®—å¤±è´¥: {ex.Message}\n{ex.StackTrace}");
         }
 
-        // ´æ´¢Î»ÖÃĞÅÏ¢
+        // å­˜å‚¨ä½ç½®ä¿¡æ¯
         StoreSceneLayout();
     }
 
     /// <summary>
-    /// ´æ´¢Î»ÖÃĞÅÏ¢
+    /// å­˜å‚¨ä½ç½®ä¿¡æ¯
     /// </summary>
     private void StoreSceneLayout()
     {

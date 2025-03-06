@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -7,7 +7,7 @@ public class CameraController : Singleton<CameraController>
 {
     public float moveDuration;
 
-    [Header("Êı¾İ")]
+    [Header("æ•°æ®")]
     public SceneData sceneData;
 
     [SerializeField]private float max_X = 9;
@@ -47,17 +47,17 @@ public class CameraController : Singleton<CameraController>
             Vector3 currentPos = Input.mousePosition;
             Vector3 difference = dragOrigin - currentPos;
 
-            // ¼ÆËãĞÂÎ»ÖÃ
+            // è®¡ç®—æ–°ä½ç½®
             Vector3 newPosition = transform.position + new Vector3(difference.x, difference.y, 0) * dragSpeed;
 
-            // Ó¦ÓÃãĞÖµÏŞÖÆ
+            // åº”ç”¨é˜ˆå€¼é™åˆ¶
             newPosition.x = Mathf.Clamp(newPosition.x, min_X, max_X);
             newPosition.y = Mathf.Clamp(newPosition.y, min_Y, max_Y);
 
-            // ÒÆ¶¯ÉãÏñ»úµ½ÏŞÖÆºóµÄÎ»ÖÃ
+            // ç§»åŠ¨æ‘„åƒæœºåˆ°é™åˆ¶åçš„ä½ç½®
             transform.position = newPosition;
 
-            // ¸üĞÂÆğÊ¼ÍÏ¶¯Î»ÖÃ
+            // æ›´æ–°èµ·å§‹æ‹–åŠ¨ä½ç½®
             dragOrigin = currentPos;
         }
     }
@@ -86,10 +86,10 @@ public class CameraController : Singleton<CameraController>
         float result = Vector3.Distance(transform.position, targetPos);
         float speed = Mathf.Abs(result) / moveDuration;
 
-        // µ±¾àÀëÄ¿±êÎ»ÖÃ»¹ÓĞÒ»¶¨¾àÀëÊ±¼ÌĞøÒÆ¶¯
+        // å½“è·ç¦»ç›®æ ‡ä½ç½®è¿˜æœ‰ä¸€å®šè·ç¦»æ—¶ç»§ç»­ç§»åŠ¨
         while (Vector3.Distance(transform.position, targetPos) > 0.01f)
         {
-            // Ê¹ÓÃVector3.MoveTowards½øĞĞÆ½»¬ÒÆ¶¯
+            // ä½¿ç”¨Vector3.MoveTowardsè¿›è¡Œå¹³æ»‘ç§»åŠ¨
             transform.position = Vector3.MoveTowards(
                 transform.position,
                 targetPos,
@@ -99,7 +99,7 @@ public class CameraController : Singleton<CameraController>
             yield return null;
         }
 
-        // È·±£×îÖÕÎ»ÖÃ¾«È·
+        // ç¡®ä¿æœ€ç»ˆä½ç½®ç²¾ç¡®
         transform.position = targetPos;
 
     }

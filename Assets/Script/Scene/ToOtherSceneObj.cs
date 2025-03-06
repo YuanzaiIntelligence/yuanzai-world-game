@@ -1,4 +1,4 @@
-using TMPro;
+ï»¿using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -8,7 +8,7 @@ public class ToOtherSceneObj : MonoBehaviour, IPointerDownHandler
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        if(nameText.text == "·µ»ØµØÍ¼")
+        if(nameText.text == "è¿”å›žåœ°å›¾")
         {
             var curSceneName = SceneTranslateManager.Instance.curSceneInfo.Name;
             //Debug.Log(curSceneName);

@@ -1,4 +1,4 @@
-public enum SceneName
+﻿public enum SceneName
 {
     Map,
     CurScene

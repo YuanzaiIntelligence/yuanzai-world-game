@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Analytics;
@@ -7,13 +7,13 @@ using static UnityEditor.SceneManagement.SceneHierarchyHooks;
 
 public class SceneTranslateManager : Singleton<SceneTranslateManager>
 {
-    [Header("ËùÓĞ³¡¾°ĞÅÏ¢")]
+    [Header("æ‰€æœ‰åœºæ™¯ä¿¡æ¯")]
     public SceneData SceneData;
 
-    [Header("¿ªÊ¼³¡¾°")]
+    [Header("å¼€å§‹åœºæ™¯")]
     public SceneName startSceneName;
 
-    [Header("µ±Ç°³¡¾°")]
+    [Header("å½“å‰åœºæ™¯")]
     public SceneInfo curSceneInfo;
 
     [Header("FadeCanvas")]
@@ -31,7 +31,7 @@ public class SceneTranslateManager : Singleton<SceneTranslateManager>
 
 
     /// <summary>
-    /// ³¡¾°¼ä×ª»»
+    /// åœºæ™¯é—´è½¬æ¢
     /// </summary>
     /// <param name="to"></param>
     public void SceneTransitionScene(string to)
@@ -50,7 +50,7 @@ public class SceneTranslateManager : Singleton<SceneTranslateManager>
     }
 
     /// <summary>
-    /// ³¡¾°·µ»ØµØÍ¼
+    /// åœºæ™¯è¿”å›åœ°å›¾
     /// </summary>
     public void SceneTransitionMap()
     {
@@ -61,7 +61,7 @@ public class SceneTranslateManager : Singleton<SceneTranslateManager>
 
 
     /// <summary>
-    /// µØÍ¼×ª»»µ½³¡¾°
+    /// åœ°å›¾è½¬æ¢åˆ°åœºæ™¯
     /// </summary>
     /// <param name="sceneName"></param>
     public void MapTransitionScene(string sceneName)
@@ -80,7 +80,7 @@ public class SceneTranslateManager : Singleton<SceneTranslateManager>
     }
 
     /// <summary>
-    /// ´Ófrom×ª»»µ½to³¡¾°
+    /// ä»fromè½¬æ¢åˆ°toåœºæ™¯
     /// </summary>
     /// <param name="from"></param>
     /// <param name="to"></param>
@@ -93,7 +93,7 @@ public class SceneTranslateManager : Singleton<SceneTranslateManager>
     }
 
     /// <summary>
-    /// Òì²½Ğ¶ÔØ¼ÓÔØ³¡¾°
+    /// å¼‚æ­¥å¸è½½åŠ è½½åœºæ™¯
     /// </summary>
     /// <param name="from"></param>
     /// <param name="to"></param>

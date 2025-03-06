@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+ï»¿using System.Collections.Generic;
 using System;
 using UnityEngine;
 
@@ -8,7 +8,7 @@ public class SceneData : ScriptableObject
     public List<SceneInfo> sceneInfoList = new();
 }
 
-// ½ÚµãĞÅÏ¢´æ´¢Àà
+// èŠ‚ç‚¹ä¿¡æ¯å­˜å‚¨ç±»
 [Serializable]
 public class SceneInfo
 {
