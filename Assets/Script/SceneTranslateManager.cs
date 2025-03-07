@@ -10,9 +10,6 @@ public class SceneTranslateManager : Singleton<SceneTranslateManager>
     [Header("所有场景信息")]
     public SceneData sceneData;
 
-    [Header("开始场景")]
-    public SceneName startSceneName;
-
     [Header("当前场景")]
     public SceneInfo curSceneInfo;
 
@@ -22,18 +19,7 @@ public class SceneTranslateManager : Singleton<SceneTranslateManager>
 
     private bool isFade;
 
-    public string lookScene;//暂时，摄像机对焦的场景名
-
-    private void Start()
-    {
-        
-        if(sceneData.sceneInfoList.Count != 0)
-        {
-            CameraController.Instance.canFreeMove = true;
-            Transition(string.Empty, startSceneName.ToString());
-        }
-
-    }
+    private string lookScene;//暂时，摄像机对焦的场景名
 
 
     /// <summary>
@@ -153,6 +139,18 @@ public class SceneTranslateManager : Singleton<SceneTranslateManager>
         fadeCanvas.blocksRaycasts = false;
 
         isFade = false;
+    }
+
+
+    /// <summary>
+    /// 监听事件
+    /// </summary>
+    /// <param name="firstScene"></param>
+    public void OnFirstLoadMap(string firstScene)
+    {
+        lookScene = firstScene;
+        CameraController.Instance.canFreeMove = true;
+        Transition(string.Empty, SceneName.Map.ToString());
     }
 
 

@@ -129,6 +129,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2106756}
   - component: {fileID: 2106755}
+  - component: {fileID: 2106757}
   m_Layer: 0
   m_Name: SceneTranslateManager
   m_TagString: Untagged
@@ -149,7 +150,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sceneData: {fileID: 11400000, guid: dd088678deb2a6c42960ce19df1fd9ef, type: 2}
-  startSceneName: 0
   curSceneInfo:
     Name: 
     X: 0
@@ -157,7 +157,6 @@ MonoBehaviour:
     linkScene: []
   fadeCanvas: {fileID: 1970030597}
   fadeDuration: 0.3
-  lookScene: 
 --- !u!4 &2106756
 Transform:
   m_ObjectHideFlags: 0
@@ -173,6 +172,34 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2106757
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2106754}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a0b6ff54b36effe498b4b7d044feebdf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventSO: {fileID: 11400000, guid: ea941780560f07a4bbafb748dc2e34f2, type: 2}
+  response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2106755}
+        m_TargetAssemblyTypeName: SceneTranslateManager, Assembly-CSharp
+        m_MethodName: OnFirstLoadMap
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &221577632
 GameObject:
   m_ObjectHideFlags: 0
@@ -423,6 +450,51 @@ MonoBehaviour:
   sceneData: {fileID: 11400000, guid: dd088678deb2a6c42960ce19df1fd9ef, type: 2}
   canFreeMove: 0
   dragSpeed: 0.01
+--- !u!1 &619231449
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 619231450}
+  - component: {fileID: 619231451}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &619231450
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 619231449}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &619231451
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 619231449}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a533b48daf68364e8f37e108a30b86c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  getNewInfoEvent: {fileID: 11400000, guid: 68489358c49ca3d49a6b368244960559, type: 2}
 --- !u!1 &1233246792
 GameObject:
   m_ObjectHideFlags: 0
@@ -623,6 +695,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2031551948}
   - component: {fileID: 2031551949}
+  - component: {fileID: 2031551950}
   m_Layer: 0
   m_Name: MapManager
   m_TagString: Untagged
@@ -668,11 +741,41 @@ MonoBehaviour:
   sceneInfoList: []
   sceneData: {fileID: 11400000, guid: dd088678deb2a6c42960ce19df1fd9ef, type: 2}
   lineDataSO: {fileID: 11400000, guid: c10ef6053a32d01498a7e866d4c4faaa, type: 2}
+  firstLoadMapEvent: {fileID: 11400000, guid: ea941780560f07a4bbafb748dc2e34f2, type: 2}
+--- !u!114 &2031551950
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2031551947}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a0b6ff54b36effe498b4b7d044feebdf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventSO: {fileID: 11400000, guid: 68489358c49ca3d49a6b368244960559, type: 2}
+  response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2031551949}
+        m_TargetAssemblyTypeName: MapManager, Assembly-CSharp
+        m_MethodName: OnGetNewInfoEvent
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 519420032}
+  - {fileID: 619231450}
   - {fileID: 2031551948}
   - {fileID: 2106756}
   - {fileID: 1233246796}

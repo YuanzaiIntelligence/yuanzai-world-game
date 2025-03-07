@@ -4,25 +4,6 @@ using System.Collections;
 using System.Text;
 using UnityEngine.Networking;
 
-///// <summary>
-///// 所有连接列表
-///// </summary>
-//[Serializable]
-//public class MapRelation
-//{
-//    public List<NodeConnection> map_relation;
-//}
-
-///// <summary>
-///// source - target连接关系
-///// </summary>
-//[Serializable]
-//public class NodeConnection
-//{
-//    public string source;
-//    public string target;
-//}
-
 
 
 public class MapManager : Singleton<MapManager>
@@ -41,16 +22,19 @@ public class MapManager : Singleton<MapManager>
     public SceneData sceneData;
     public LineDataSO lineDataSO;
 
+    [Header("事件广播")]
+    public StringEventSO firstLoadMapEvent;
+
+    private string mapInfo;
+
     protected override void Awake()
     {
         base.Awake();
 
         if(sceneData.sceneInfoList.Count == 0)
             StartCoroutine(GetMapRelationInfo(world_id));
-
-
-        //暂时
-        SetFirstScene();
+        else
+            SetFirstScene();
 
     }
 
@@ -76,34 +60,36 @@ public class MapManager : Singleton<MapManager>
         // 将请求体序列化为JSON
         string jsonData = JsonUtility.ToJson(requestData);
 
-        // 创建UnityWebRequest
-        UnityWebRequest request = new UnityWebRequest(apiUrl, "POST");
-        byte[] bodyRaw = Encoding.UTF8.GetBytes(jsonData);
-        request.uploadHandler = new UploadHandlerRaw(bodyRaw);
-        request.downloadHandler = new DownloadHandlerBuffer();
+        yield return StartCoroutine(GameManager.Instance.PostWebRequestSync(apiUrl, jsonData));
 
-        // 设置请求头
-        request.SetRequestHeader("Content-Type", "application/json");
-
-        // 发送请求
-        yield return request.SendWebRequest();
-
-        // 处理响应
-        if (request.result == UnityWebRequest.Result.ConnectionError ||
-            request.result == UnityWebRequest.Result.ProtocolError)
+        try
         {
-            Debug.LogError("API请求错误: " + request.error);
+            responseData = JsonUtility.FromJson<MapRelationResponseData>(mapInfo);
+
+            // 检查是否成功解析
+            if (responseData == null)
+            {
+                Debug.LogError("地图数据解析为空");
+            }
         }
-        else
+        catch (System.Exception e)
         {
-            // 成功获取响应
-            Debug.Log("API响应: " + request.downloadHandler.text);
-
-            // 解析JSON响应
-            responseData = JsonUtility.FromJson<MapRelationResponseData>(request.downloadHandler.text);
-
-            StoreSceneLayout();
+            Debug.LogError($"解析JSON失败: {e.Message}\n原始JSON: {mapInfo}");
         }
+        
+
+        StoreSceneLayout();
+
+    }
+
+
+    /// <summary>
+    /// 监听事件
+    /// </summary>
+    /// <param name="newInfo"></param>
+    public void OnGetNewInfoEvent(string newInfo)
+    {
+        mapInfo = newInfo;
     }
 
 
@@ -142,8 +128,6 @@ public class MapManager : Singleton<MapManager>
         //暂时
         SetFirstScene();
 
-        CameraController.Instance.canFreeMove = true;
-        SceneTranslateManager.Instance.Transition(string.Empty, SceneName.Map.ToString());
     }
 
     /// <summary>
@@ -152,7 +136,10 @@ public class MapManager : Singleton<MapManager>
     private void SetFirstScene()
     {
         if (sceneData.sceneInfoList.Count != 0)
-            SceneTranslateManager.Instance.lookScene = sceneData.sceneInfoList[0].Name;
+        {
+            firstLoadMapEvent.RaisEvent(sceneData.sceneInfoList[0].Name, this);
+        }
+            
     }
 
 }
